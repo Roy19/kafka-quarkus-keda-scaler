@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: kafka-producer-job-notls-noacks
+  name: kafka-producer-job-notls-noacks
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 1000
+  parallelism: 3
+  completions: 3
+  backoffLimit: 1
+  template:
+    metadata:
+      name: kafka-perf-producer
+      labels:
+        app: kafka-perf-producer
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: kafka-perf-producer
+        image: quay.io/strimzi/kafka:0.24.0-kafka-2.7.1
+        command: [ "bin/kafka-producer-perf-test.sh" ]
+        args: [ "--topic", "my-topic", "--throughput", "100000", "--num-records", "100000", "--producer-props", "bootstrap.servers=my-kafka-release.default.svc.cluster.local:9092", "--record-size", "1000" ]
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - kafka-perf-producer
+              topologyKey: kubernetes.io/hostname

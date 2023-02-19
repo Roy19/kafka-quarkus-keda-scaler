@@ -16,7 +16,7 @@ spec:
       containers:
         - env:
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: my-cluster-kafka-bootstrap.kafka.svc:9092
+              value: my-kafka-release.default.svc.cluster.local:9092
           name: kafka-quarkus-consumer
-          image: docker.io/matzew/kafka-quarkus-consumer
+          image: quarkus/quarkus-keda-scaler-jvm
           imagePullPolicy: IfNotPresent

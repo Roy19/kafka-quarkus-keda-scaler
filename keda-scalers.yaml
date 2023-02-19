@@ -12,7 +12,7 @@ spec:
   triggers:
     - type: kafka
       metadata:
-        bootstrapServers: my-cluster-kafka-bootstrap.kafka.svc:9092
+        bootstrapServers: my-kafka-release.default.svc.cluster.local:9092
         consumerGroup: my-group
         topic: my-topic
         # Optional
